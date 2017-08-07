@@ -602,6 +602,8 @@ INSTALLED_LOADER_TARGET := $(strip $(wildcard $(TARGET_DEVICE_DIR)/ota/loader/RK
 INSTALLED_PARAMETER_TARGET := $(strip $(wildcard $(TARGET_DEVICE_DIR)/ota/parameter/parameter*))
 INSTALLED_UBOOT_TARGET := $(strip $(wildcard u-boot/uboot.img))
 INSTALLED_TRUST_TARGET := $(strip $(wildcard u-boot/trust.img))
+INSTALLED_VENDOR0_TARGET := $(strip $(wildcard $(PRODUCT_OUT)/vendor0.img))
+INSTALLED_VENDOR1_TARGET := $(strip $(wildcard $(PRODUCT_OUT)/vendor1.img))
 
 # -----------------------------------------------------------------
 # NOTICE files
@@ -1874,10 +1876,13 @@ endif # BOARD_USES_RECOVERY_AS_BOOT
 	@# Contents of the data image
 	$(hide) $(call package_files-copy-root, \
 		$(TARGET_OUT_DATA),$(zip_root)/DATA)
+
+ifneq ($(strip $(TARGET_BOARD_PLATFORM)),rk3288)
 ifdef BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE
 	@# Contents of the vendor image
 	$(hide) $(call package_files-copy-root, \
 		$(TARGET_OUT_VENDOR),$(zip_root)/VENDOR)
+endif
 endif
 ifdef INSTALLED_SYSTEMOTHERIMAGE_TARGET
 	@# Contents of the system_other image
@@ -1918,6 +1923,19 @@ ifeq ($(INSTALLED_TRUST_TARGET),)
 else
 	$(hide) cp $(INSTALLED_TRUST_TARGET) $(zip_root)/trust.img
 endif
+
+ifeq ($(INSTALLED_VENDOR0_TARGET),)
+	$(info No trust for vendor0.img to otapackage)
+else
+	$(hide) cp $(INSTALLED_VENDOR0_TARGET) $(zip_root)/vendor0.img
+endif
+
+ifeq ($(INSTALLED_VENDOR1_TARGET),)
+	$(info No trust for vendor1.img to otapackage)
+else
+	$(hide) cp $(INSTALLED_VENDOR1_TARGET) $(zip_root)/vendor1.img
+endif
+
 ifdef BOARD_FLASH_BLOCK_SIZE
 	$(hide) echo "blocksize=$(BOARD_FLASH_BLOCK_SIZE)" >> $(zip_root)/META/misc_info.txt
 endif
