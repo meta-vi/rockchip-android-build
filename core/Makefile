@@ -910,6 +910,15 @@ recovery_fstab := $(if $(wildcard $(recovery_fstab)), $(recovery_fstab),\
 recovery_fstab := $(if $(wildcard $(recovery_fstab)), $(recovery_fstab),\
 	device/rockchip/common/recovery.fstab)
 endif
+ifdef TARGET_RECOVERY_FSTAB_SD
+recovery_fstab_sd := $(TARGET_RECOVERY_FSTAB_SD)
+else
+recovery_fstab_sd := $(strip $(wildcard $(TARGET_DEVICE_DIR)/recovery.sd.fstab))
+recovery_fstab_sd := $(if $(wildcard $(recovery_fstab_sd)), $(recovery_fstab_sd),\
+        device/rockchip/$(TARGET_BOARD_PLATFORM)/recovery.sd.fstab)
+recovery_fstab_sd := $(if $(wildcard $(recovery_fstab_sd)), $(recovery_fstab_sd),\
+        device/rockchip/common/recovery.sd.fstab)
+endif
 ifdef TARGET_RECOVERY_FSTAB_EMMC
 recovery_fstab_emmc := $(TARGET_RECOVERY_FSTAB_EMMC)
 else
@@ -1020,6 +1029,8 @@ define build-recoveryimage-target
     cp -rf $(item) $(TARGET_RECOVERY_ROOT_OUT)/$(newline))
   $(hide) $(foreach item,$(recovery_fstab), \
     cp -f $(item) $(TARGET_RECOVERY_ROOT_OUT)/etc/recovery.fstab)
+  $(hide) $(foreach item,$(recovery_fstab_sd), \
+        cp -f $(item) $(TARGET_RECOVERY_ROOT_OUT)/etc/recovery.sd.fstab)
   $(hide) $(foreach item,$(recovery_fstab_emmc), \
 	cp -f $(item) $(TARGET_RECOVERY_ROOT_OUT)/etc/recovery.emmc.fstab)
   $(hide) $(foreach item,$(recovery_fstab_nvme), \
@@ -1066,6 +1077,7 @@ $(INSTALLED_BOOTIMAGE_TARGET): $(MKBOOTFS) $(MKBOOTIMG) $(MINIGZIP) \
 		$(INSTALLED_2NDBOOTLOADER_TARGET) \
 		$(recovery_build_prop) $(recovery_resource_deps) \
 		$(recovery_fstab) \
+		$(recovery_fstab_sd) \
 		$(recovery_fstab_emmc) \
 		$(recovery_fstab_nvme) \
 		$(RECOVERY_INSTALL_OTA_KEYS)
