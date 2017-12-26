@@ -351,6 +351,10 @@ class EdifyGenerator(object):
     """clear misc command"""
     #self.script.append('clear_misc_command();')
 
+  def WriteRawSparseImage(self, point, image_name):
+    """update Sparse Image"""
+    self.script.append('write_raw_sparse_image("%s", "%s") || abort("update %s failed.");' %(point, image_name, image_name))
+
   def WriteRawLoaderImage(self):
     """update loader"""
     self.script.append('write_raw_loader_image() || abort("update loader failed.");')
