@@ -27,7 +27,8 @@ PRODUCT_PACKAGES := \
     Provision \
     SystemUI \
     EasterEgg \
-    WallpaperCropper
+    WallpaperCropper \
+    VoltageDetectService
 
 ifneq ($(strip $(TARGET_BOARD_PLATFORM_PRODUCT)), box)
 PRODUCT_PACKAGES += \
