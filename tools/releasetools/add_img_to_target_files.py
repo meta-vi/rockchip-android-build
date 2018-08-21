@@ -74,7 +74,7 @@ OPTIONS.is_signing = False
 
 
 # Partitions that should have their care_map added to META/care_map.txt.
-PARTITIONS_WITH_CARE_MAP = ('system', 'vendor', 'product')
+PARTITIONS_WITH_CARE_MAP = ('system', 'vendor', 'product','oem')
 
 
 class OutputFile(object):
@@ -163,6 +163,19 @@ def AddSystemOther(output_zip):
 
   CreateImage(OPTIONS.input_tmp, OPTIONS.info_dict, "system_other", img)
 
+def AddOem(output_zip):
+  """Turn the contents of  OEM into a oem image and store in it
+  output_zip."""
+
+  img = OutputFile(output_zip, OPTIONS.input_tmp, "IMAGES", "oem.img")
+  if os.path.exists(img.input_name):
+    print("oem.img already exists in %s, no need to rebuild..." ,"oem.img")
+    return img.input_name
+
+  block_list = OutputFile(output_zip, OPTIONS.input_tmp, "IMAGES", "oem.map")
+  CreateImage(OPTIONS.input_tmp, OPTIONS.info_dict, "oem", img,
+              block_list=block_list)
+  return img.name
 
 def AddVendor(output_zip):
   """Turn the contents of VENDOR into a vendor image and store in it
@@ -288,6 +301,11 @@ def CreateImage(input_dir, info_dict, what, output_file, block_list=None):
   if what == "vendor":
     print ("get vendor.img from ota")
     img_out = os.path.join(os.environ["OUT"], "vendor.img")
+    shutil.copyfile(output_file.name, img_out)
+
+  if what == "oem":
+    print ("get oem.img from ota")
+    img_out = os.path.join(os.environ["OUT"], "oem.img")
     shutil.copyfile(output_file.name, img_out)
 
   output_file.Write()
@@ -665,6 +683,9 @@ def AddImagesToTargetFiles(filename):
   has_vendor = (os.path.isdir(os.path.join(OPTIONS.input_tmp, "VENDOR")) or
                 os.path.exists(os.path.join(OPTIONS.input_tmp, "IMAGES",
                                             "vendor.img")))
+  has_oem = (os.path.isdir(os.path.join(OPTIONS.input_tmp, "OEM")) or
+                 os.path.exists(os.path.join(OPTIONS.input_tmp, "IMAGES",
+                                             "oem.img")))
   has_product = (os.path.isdir(os.path.join(OPTIONS.input_tmp, "PRODUCT")) or
                  os.path.exists(os.path.join(OPTIONS.input_tmp, "IMAGES",
                                              "product.img")))
@@ -739,6 +760,10 @@ def AddImagesToTargetFiles(filename):
   if has_vendor:
     banner("vendor")
     partitions['vendor'] = AddVendor(output_zip)
+  
+  if has_oem:
+    banner("oem")
+    partitions['oem'] = AddOem(output_zip)
 
   if has_product:
     banner("product")

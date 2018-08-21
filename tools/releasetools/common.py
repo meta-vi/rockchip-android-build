@@ -633,7 +633,7 @@ def GetSparseImage(which, tmpdir, input_zip, allow_shared_blocks):
   Returns:
     A SparseImage object, with file_map info loaded.
   """
-  assert which in ("system", "vendor")
+  assert which in ("system", "vendor","oem")
 
   path = os.path.join(tmpdir, "IMAGES", which + ".img")
   mappath = os.path.join(tmpdir, "IMAGES", which + ".map")

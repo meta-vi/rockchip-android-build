@@ -2550,6 +2550,7 @@ define fs_config
 (cd $(1); find . -type d | sed 's,$$,/,'; find . \! -type d) | cut -c 3- | sort | sed 's,^,$(2),' | $(HOST_OUT_EXECUTABLES)/fs_config -C -D $(TARGET_OUT) -S $(SELINUX_FC) -R "$(2)"
 endef
 
+BUILT_OTA_OEMIMAGE_TARGET := $(PRODUCT_OUT)/oem/
 # Depending on the various images guarantees that the underlying
 # directories are up-to-date.
 $(BUILT_TARGET_FILES_PACKAGE): \
@@ -2564,6 +2565,7 @@ $(BUILT_TARGET_FILES_PACKAGE): \
 		$(INSTALLED_PRODUCTIMAGE_TARGET) \
 		$(INSTALLED_VBMETAIMAGE_TARGET) \
 		$(INSTALLED_DTBOIMAGE_TARGET) \
+		$(BUILT_OTA_OEMIMAGE_TARGET) \
 		$(INTERNAL_SYSTEMOTHERIMAGE_FILES) \
 		$(INSTALLED_ANDROID_INFO_TXT_TARGET) \
 		$(INSTALLED_KERNEL_TARGET) \
@@ -2624,6 +2626,12 @@ endif
 ifneq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
 ifdef INSTALLED_KERNEL_TARGET
 	$(hide) cp $(INSTALLED_KERNEL_TARGET) $(zip_root)/BOOT/kernel
+endif
+ifdef BUILT_OTA_OEMIMAGE_TARGET
+	$(warning $(BUILT_OTA_OEMIMAGE_TARGET))
+	$(hide) rm -rf $(zip_root)/OEM
+	$(hide) mkdir -p $(zip_root)/OEM
+	$(hide) cp -rf $(BUILT_OTA_OEMIMAGE_TARGET)/* $(zip_root)/OEM/
 endif
 ifdef INSTALLED_2NDBOOTLOADER_TARGET
 	$(hide) cp $(INSTALLED_2NDBOOTLOADER_TARGET) $(zip_root)/BOOT/second

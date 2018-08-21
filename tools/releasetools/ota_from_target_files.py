@@ -594,6 +594,14 @@ def HasVendorPartition(target_files_zip):
   except KeyError:
     return False
 
+def HasOemPartition(target_files_zip):
+  try:
+    target_files_zip.getinfo("OEM/")
+    return True
+  except KeyError:
+    return False
+
+
 
 def HasTrebleEnabled(target_files_zip, target_info):
   return (HasVendorPartition(target_files_zip) and
@@ -807,7 +815,8 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     system_progress -= 0.1
   if HasVendorPartition(input_zip):
     system_progress -= 0.1
-
+  if HasOemPartition(input_zip):
+    system_progress -= 0.1
   script.ShowProgress(system_progress, 0)
 
   # See the notes in WriteBlockIncrementalOTAPackage().
@@ -834,6 +843,15 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
     vendor_tgt.ResetFileMap()
     vendor_diff = common.BlockDifference("vendor", vendor_tgt)
     vendor_diff.WriteScript(script, output_zip)
+
+  if HasOemPartition(input_zip):
+    script.ShowProgress(0.1, 0)
+
+    oem_tgt = common.GetSparseImage("oem", OPTIONS.input_tmp, input_zip,
+                                       allow_shared_blocks)
+    oem_tgt.ResetFileMap()
+    oem_diff = common.BlockDifference("oem", oem_tgt)
+    oem_diff.WriteScript(script, output_zip)
 
   AddCompatibilityArchiveIfTrebleEnabled(input_zip, output_zip, target_info)
 
@@ -1417,6 +1435,26 @@ def WriteBlockIncrementalOTAPackage(target_zip, source_zip, output_file):
   else:
     vendor_diff = None
 
+  if HasOemPartition(target_zip):
+    if not HasOemPartition(source_zip):
+      raise RuntimeError("can't generate incremental that adds /oem")
+    oem_src = common.GetSparseImage("oem", OPTIONS.source_tmp, source_zip,
+                                       allow_shared_blocks)
+    oem_tgt = common.GetSparseImage("oem", OPTIONS.target_tmp, target_zip,
+                                       allow_shared_blocks)
+
+    # Check first block of oem partition for remount R/W only if
+    # disk type is ext4
+    oem_partition = source_info["fstab"]["/oem"]
+    check_first_block = oem_partition.fs_type == "ext4"
+    disable_imgdiff = oem_partition.fs_type == "squashfs"
+    oem_diff = common.BlockDifference("oem", oem_tgt, oem_src,
+                                         check_first_block,
+                                         version=blockimgdiff_version,
+                                         disable_imgdiff=disable_imgdiff)
+  else:
+    oem_diff = None
+
   AddCompatibilityArchiveIfTrebleEnabled(
       target_zip, output_zip, target_info, source_info)
 
@@ -1487,6 +1525,8 @@ else if get_stage("%(bcb_dev)s") != "3/3" then
     size.append(system_diff.required_cache)
   if vendor_diff:
     size.append(vendor_diff.required_cache)
+  if oem_diff:
+    size.append(oem_diff.required_cache)
 
   if updating_boot:
     boot_type, boot_device = common.GetTypeAndDevice("/boot", source_info)
@@ -1531,6 +1571,8 @@ else
   system_diff.WriteVerifyScript(script, touched_blocks_only=True)
   if vendor_diff:
     vendor_diff.WriteVerifyScript(script, touched_blocks_only=True)
+  if oem_diff:
+    oem_diff.WriteVerifyScript(script, touched_blocks_only=True)
 
   script.Comment("---- start making changes here ----")
 
@@ -1541,6 +1583,8 @@ else
 
   if vendor_diff:
     vendor_diff.WriteScript(script, output_zip, progress=0.1)
+  if oem_diff:
+    oem_diff.WriteScript(script, output_zip, progress=0.1)
 
   if OPTIONS.two_step:
     common.ZipWriteStr(output_zip, "boot.img", target_boot.data)
