@@ -26,12 +26,16 @@ PRODUCT_PACKAGES := \
 PRODUCT_PACKAGES += \
     Galaxy4 \
     HoloSpiralWallpaper \
-    LiveWallpapers \
-    LiveWallpapersPicker \
-    MagicSmokeWallpapers \
     NoiseField \
     PhaseBeam \
     PhotoTable
+
+ifneq ($(strip $(BUILD_WITH_GO_OPT)),true)
+PRODUCT_PACKAGES += \
+    LiveWallpapers \
+    LiveWallpapersPicker \
+    MagicSmokeWallpapers
+endif
 
 # Bluetooth:
 #   audio.a2dp.default is a system module. Generic system image includes
