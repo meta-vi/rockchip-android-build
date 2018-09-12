@@ -763,7 +763,8 @@ def AddImagesToTargetFiles(filename):
   
   if has_oem:
     banner("oem")
-    partitions['oem'] = AddOem(output_zip)
+#    partitions['oem'] = AddOem(output_zip)
+    AddOem(output_zip)
 
   if has_product:
     banner("product")
