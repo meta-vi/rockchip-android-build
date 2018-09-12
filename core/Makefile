@@ -2622,16 +2622,16 @@ else
 	$(hide) $(call package_files-copy-root, \
 		$(TARGET_ROOT_OUT),$(zip_root)/BOOT/RAMDISK)
 endif
-	@# If we are using recovery as boot, this is already done when processing recovery.
-ifneq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
-ifdef INSTALLED_KERNEL_TARGET
-	$(hide) cp $(INSTALLED_KERNEL_TARGET) $(zip_root)/BOOT/kernel
-endif
 ifdef BUILT_OTA_OEMIMAGE_TARGET
 	$(warning $(BUILT_OTA_OEMIMAGE_TARGET))
 	$(hide) rm -rf $(zip_root)/OEM
 	$(hide) mkdir -p $(zip_root)/OEM
 	$(hide) cp -rf $(BUILT_OTA_OEMIMAGE_TARGET)/* $(zip_root)/OEM/
+endif
+	@# If we are using recovery as boot, this is already done when processing recovery.
+ifneq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
+ifdef INSTALLED_KERNEL_TARGET
+	$(hide) cp $(INSTALLED_KERNEL_TARGET) $(zip_root)/BOOT/kernel
 endif
 ifdef INSTALLED_2NDBOOTLOADER_TARGET
 	$(hide) cp $(INSTALLED_2NDBOOTLOADER_TARGET) $(zip_root)/BOOT/second
