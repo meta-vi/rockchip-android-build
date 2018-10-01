@@ -403,6 +403,7 @@ def AddVBMeta(output_zip, partitions):
         'recovery', 'system', 'vendor', 'dtbo'.
   """
   img = OutputFile(output_zip, OPTIONS.input_tmp, "IMAGES", "vbmeta.img")
+  targetFile = os.path.join(OPTIONS.input_tmp, "vbmeta.img")
   if os.path.exists(img.input_name):
     print("vbmeta.img already exists; not rebuilding...")
     return img.input_name
@@ -447,6 +448,11 @@ def AddVBMeta(output_zip, partitions):
   p.communicate()
   assert p.returncode == 0, "avbtool make_vbmeta_image failed"
   img.Write()
+  out_path = os.environ["OUT"] + "/vbmeta.img"
+  cmd = "cp %s %s"%(img.input_name, targetFile)
+  os.system(cmd);
+  cmd = "cp %s %s"%(img.input_name, out_path)
+  os.system(cmd);
 
 
 def AddPartitionTable(output_zip):
