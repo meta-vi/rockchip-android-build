@@ -236,6 +236,10 @@ else
 ADDITIONAL_DEFAULT_PROPERTIES += ro.actionable_compatible_property.enabled=${PRODUCT_COMPATIBLE_PROPERTY}
 endif
 
+ifeq ($(strip $(BUILD_WITH_GOOGLE_GMS_EXPRESS)),true)
+ADDITIONAL_BUILD_PROPERTIES += ro.base_build=noah
+endif
+
 # -----------------------------------------------------------------
 ###
 ### In this section we set up the things that are different
