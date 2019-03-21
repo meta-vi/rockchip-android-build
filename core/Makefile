@@ -2716,7 +2716,7 @@ ifeq ($(INSTALLED_UBOOT_TARGET),)
 else
 ifeq ($(AB_OTA_UPDATER),true)
 	$(hide) mkdir -p $(zip_root)/IMAGES
-	$(hide) cp $(INSTALLED_UBOOT_TARGET) $(zip_root)/IMAGES/bootloader.img
+	$(hide) cp $(INSTALLED_UBOOT_TARGET) $(zip_root)/IMAGES/uboot.img
 else
 	$(hide) cp $(INSTALLED_UBOOT_TARGET) $(zip_root)/uboot.img
 endif
@@ -2726,7 +2726,7 @@ ifeq ($(INSTALLED_TRUST_TARGET),)
 else
 ifeq ($(AB_OTA_UPDATER),true)
 	$(hide) mkdir -p $(zip_root)/IMAGES
-	$(hide) cp $(INSTALLED_TRUST_TARGET) $(zip_root)/IMAGES/tos.img
+	$(hide) cp $(INSTALLED_TRUST_TARGET) $(zip_root)/IMAGES/trust.img
 else
 	$(hide) cp $(INSTALLED_TRUST_TARGET) $(zip_root)/trust.img
 endif
