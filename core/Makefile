@@ -81,6 +81,9 @@ ADDITIONAL_DEFAULT_PROPERTIES += \
 ADDITIONAL_DEFAULT_PROPERTIES := $(call uniq-pairs-by-first-component, \
     $(ADDITIONAL_DEFAULT_PROPERTIES),=)
 
+$(shell rm -f $(PRODUCT_OUT)/system/build.prop)
+$(shell rm -f $(call intermediates-dir-for,ETC,system_build_prop)/build.prop)
+
 intermediate_system_build_prop := $(call intermediates-dir-for,ETC,system_build_prop)/build.prop
 
 $(INSTALLED_DEFAULT_PROP_TARGET): $(intermediate_system_build_prop)
