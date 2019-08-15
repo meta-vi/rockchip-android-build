@@ -24,9 +24,9 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony_product.mk)
 $(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
 
 # Additional settings used in all AOSP builds
-PRODUCT_PROPERTY_OVERRIDES += \
+PRODUCT_PRODUCT_PROPERTIES += \
     ro.config.ringtone=Ring_Synth_04.ogg \
-    ro.config.notification_sound=pixiedust.ogg
+    ro.config.notification_sound=pixiedust.ogg \
 
 # The mainline checking whitelist, should be clean up
 PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += \
@@ -41,7 +41,6 @@ PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += \
     system/lib/libgiftranscode.so \
     system/lib64/libframesequence.so \
     system/lib64/libgiftranscode.so \
-    system/priv-app/Dialer/Dialer.apk \
 
 # Some GSI builds enable dexpreopt, whitelist these preopt files
 PRODUCT_ARTIFACT_PATH_REQUIREMENT_WHITELIST += %.odex %.vdex %.art
@@ -74,14 +73,12 @@ PRODUCT_COPY_FILES += \
 # Support addtional P vendor interface
 PRODUCT_EXTRA_VNDK_VERSIONS := 28
 
-# Default AOSP packages
+# More AOSP packages
 PRODUCT_PACKAGES += \
     messaging \
-
-# Default AOSP packages
-PRODUCT_PACKAGES += \
     PhotoTable \
     WAPPushManager \
+    WallpaperPicker \
 
 # Telephony:
 #   Provide a APN configuration to GSI product

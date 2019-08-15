@@ -28,16 +28,9 @@ BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE :=
 BOARD_USES_METADATA_PARTITION := true
 
 # Android Verified Boot (AVB):
-#   Set AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED (--flags 2) in
-#   vbmeta.img to disable AVB verification. Also set the rollback index
-#   to zero, to prevent the device bootloader from updating the last seen
-#   rollback index in the tamper-evident storage.
-#
-# To disable AVB for GSI, use the vbmeta.img and the GSI together.
-# To enable AVB for GSI, include the GSI public key into the device-specific
-# vbmeta.img.
+#   Set the rollback index to zero, to prevent the device bootloader from
+#   updating the last seen rollback index in the tamper-evident storage.
 BOARD_AVB_ROLLBACK_INDEX := 0
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
 
 # Enable chain partition for system.
 BOARD_AVB_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
@@ -56,6 +49,9 @@ endif
 # The partition size doesn't matter, just to make build pass.
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_CACHEIMAGE_PARTITION_SIZE := 16777216
+
+# Setup a vendor image to let PRODUCT_PROPERTY_OVERRIDES does not affect GSI
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 
 # Disable 64 bit mediadrmserver
 TARGET_ENABLE_MEDIADRM_64 :=
