@@ -427,6 +427,7 @@ def AddVBMeta(output_zip, partitions, name, needed_partitions):
 
   img = OutputFile(
       output_zip, OPTIONS.input_tmp, "IMAGES", "{}.img".format(name))
+  targetFile = os.path.join(OPTIONS.input_tmp, "vbmeta.img")
   if os.path.exists(img.name):
     logger.info("%s.img already exists; not rebuilding...", name)
     return img.name
@@ -471,6 +472,11 @@ def AddVBMeta(output_zip, partitions, name, needed_partitions):
 
   common.RunAndCheckOutput(cmd)
   img.Write()
+  out_path = os.environ["OUT"] + "/vbmeta.img"
+  cmd = "cp %s %s"%(img.name, targetFile)
+  os.system(cmd);
+  cmd = "cp %s %s"%(img.name, out_path)
+  os.system(cmd);
   return img.name
 
 
