@@ -1049,7 +1049,12 @@ endif # TARGET_NO_KERNEL
 INSTALLED_LOADER_TARGET := $(strip $(wildcard $(TARGET_DEVICE_DIR)/ota/loader/RK*Loader*.bin))
 INSTALLED_PARAMETER_TARGET := $(strip $(wildcard $(TARGET_DEVICE_DIR)/ota/parameter/parameter*))
 INSTALLED_UBOOT_TARGET := $(strip $(wildcard u-boot/uboot.img))
+HAVE_TRUST_WITH_TA := $(shell test -f u-boot/trust_with_ta.img && echo yes)
+ifeq ($(HAVE_TRUST_WITH_TA),yes)
+INSTALLED_TRUST_TARGET := $(strip $(wildcard u-boot/trust_with_ta.img))
+else
 INSTALLED_TRUST_TARGET := $(strip $(wildcard u-boot/trust.img))
+endif
 
 .PHONY: notice_files
 
