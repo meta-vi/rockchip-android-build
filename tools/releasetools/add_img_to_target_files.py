@@ -252,6 +252,7 @@ def AddDtbo(output_zip):
   image under PREBUILT_IMAGES/, signs it as needed, and returns the image name.
   """
   img = OutputFile(output_zip, OPTIONS.input_tmp, "IMAGES", "dtbo.img")
+  targetFile = os.path.join(OPTIONS.input_tmp, "dtbo.img")
   if os.path.exists(img.name):
     logger.info("dtbo.img already exists; no need to rebuild...")
     return img.name
@@ -275,6 +276,11 @@ def AddDtbo(output_zip):
     common.RunAndCheckOutput(cmd)
 
   img.Write()
+  out_path = os.environ["OUT"] + "/dtbo.img"
+  cmd = "cp %s %s"%(img.name, targetFile)
+  os.system(cmd);
+  cmd = "cp %s %s"%(img.name, out_path)
+  os.system(cmd);
   return img.name
 
 
