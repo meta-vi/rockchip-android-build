@@ -2766,10 +2766,17 @@ $(my_kernel_configs): .KATI_IMPLICIT_OUTPUTS := $(my_kernel_version)
 $(my_kernel_configs): PRIVATE_KERNEL_VERSION_FILE := $(my_kernel_version)
 $(my_kernel_configs): PRIVATE_DECOMPRESS_TOOLS := $(my_decompress_tools)
 $(my_kernel_configs): $(foreach pair,$(my_decompress_tools),$(call word-colon,2,$(pair)))
+ifeq ($(findstring "zImage",$(INSTALLED_KERNEL_TARGET)),)
 $(my_kernel_configs): $(EXTRACT_KERNEL) $(INSTALLED_KERNEL_TARGET)
-	$< --tools $(PRIVATE_DECOMPRESS_TOOLS) --input $(INSTALLED_KERNEL_TARGET) \
+	$< --tools $(PRIVATE_DECOMPRESS_TOOLS) --input  kernel/boot.img \
 	  --output-configs $@ \
 	  --output-version $(PRIVATE_KERNEL_VERSION_FILE)
+else
+$(my_kernel_configs): $(EXTRACT_KERNEL) $(INSTALLED_KERNEL_TARGET)
+	$< --tools $(PRIVATE_DECOMPRESS_TOOLS) --input  $(INSTALLED_KERNEL_TARGET) \
+	  --output-configs $@ \
+	  --output-version $(PRIVATE_KERNEL_VERSION_FILE)
+endif
 
 $(BUILT_ASSEMBLED_VENDOR_MANIFEST): $(my_kernel_configs) $(my_kernel_version)
 $(BUILT_ASSEMBLED_VENDOR_MANIFEST): PRIVATE_FLAGS += --kernel $$(cat $(my_kernel_version)):$(my_kernel_configs)
