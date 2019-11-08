@@ -14,6 +14,11 @@
 # limitations under the License.
 #
 
+# If device are shipping GMS, dont include this file
+ifneq ($(strip $(BUILD_WITH_GOOGLE_MARKET)), true)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base_none_gms.mk)
+endif
+
 # Base modules and settings for the system partition.
 PRODUCT_PACKAGES += \
     abb \
@@ -50,12 +55,7 @@ PRODUCT_PACKAGES += \
     cgroups.json \
     charger \
     cmd \
-    com.android.conscrypt \
     com.android.location.provider \
-    com.android.media \
-    com.android.media.swcodec \
-    com.android.resolv \
-    com.android.tzdata \
     ContactsProvider \
     content \
     crash_dump \
