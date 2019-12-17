@@ -19,6 +19,10 @@ ifneq ($(strip $(BUILD_WITH_GOOGLE_MARKET)), true)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base_none_gms.mk)
 endif
 
+ifeq ($(strip $(TARGET_BOARD_PLATFORM_PRODUCT)), box)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base_none_gms.mk)
+endif
+
 # Base modules and settings for the system partition.
 PRODUCT_PACKAGES += \
     abb \
