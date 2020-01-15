@@ -21,3 +21,9 @@ PRODUCT_PACKAGES += \
     com.android.media.swcodec \
     com.android.resolv \
     com.android.tzdata
+
+# GPSU network framework modules
+PRODUCT_PACKAGES += \
+    InProcessNetworkStack \
+    PlatformCaptivePortalLogin \
+    PlatformNetworkPermissionConfig
