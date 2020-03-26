@@ -605,8 +605,8 @@ INSTALLED_LOADER_TARGET := $(strip $(wildcard $(TARGET_DEVICE_DIR)/ota/loader/RK
 INSTALLED_PARAMETER_TARGET := $(strip $(wildcard $(TARGET_DEVICE_DIR)/ota/parameter/parameter*))
 INSTALLED_UBOOT_TARGET := $(strip $(wildcard u-boot/uboot.img))
 INSTALLED_TRUST_TARGET := $(strip $(wildcard u-boot/trust.img))
-INSTALLED_VENDOR0_TARGET := $(strip $(wildcard $(PRODUCT_OUT)/vendor0.img))
-INSTALLED_VENDOR1_TARGET := $(strip $(wildcard $(PRODUCT_OUT)/vendor1.img))
+INSTALLED_VENDOR0_TARGET := $(PRODUCT_OUT)/vendor0.img
+INSTALLED_VENDOR1_TARGET := $(PRODUCT_OUT)/vendor1.img
 
 # -----------------------------------------------------------------
 # NOTICE files
@@ -1950,19 +1950,8 @@ ifeq ($(INSTALLED_TRUST_TARGET),)
 else
 	$(hide) cp $(INSTALLED_TRUST_TARGET) $(zip_root)/trust.img
 endif
-
-ifeq ($(INSTALLED_VENDOR0_TARGET),)
-	$(info No trust for vendor0.img to otapackage)
-else
-	$(hide) cp $(INSTALLED_VENDOR0_TARGET) $(zip_root)/vendor0.img
-endif
-
-ifeq ($(INSTALLED_VENDOR1_TARGET),)
-	$(info No trust for vendor1.img to otapackage)
-else
-	$(hide) cp $(INSTALLED_VENDOR1_TARGET) $(zip_root)/vendor1.img
-endif
-
+	$(hide) if test -e $(INSTALLED_VENDOR0_TARGET); then cp $(INSTALLED_VENDOR0_TARGET) $(zip_root)/vendor0.img; else echo "No trust for vendor0.img to otapackage"; fi
+	$(hide) if test -e $(INSTALLED_VENDOR1_TARGET); then cp $(INSTALLED_VENDOR1_TARGET) $(zip_root)/vendor1.img; else echo "No trust for vendor1.img to otapackage"; fi
 ifdef BOARD_FLASH_BLOCK_SIZE
 	$(hide) echo "blocksize=$(BOARD_FLASH_BLOCK_SIZE)" >> $(zip_root)/META/misc_info.txt
 endif
