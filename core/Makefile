@@ -148,7 +148,7 @@ ifeq (,$(strip $(BUILD_FINGERPRINT)))
   else
     BF_BUILD_NUMBER := $(BUILD_NUMBER)
   endif
-  BUILD_FINGERPRINT := $(PRODUCT_BRAND)/$(TARGET_PRODUCT)/$(TARGET_DEVICE):$(PLATFORM_VERSION)/$(BUILD_ID)/$(BF_BUILD_NUMBER):$(TARGET_BUILD_VARIANT)/$(BUILD_VERSION_TAGS)
+  BUILD_FINGERPRINT := $(PRODUCT_BRAND)/$(TARGET_PRODUCT)/$(ASUS_TARGET_DEVICE):$(PLATFORM_VERSION)/$(BUILD_ID)/$(BF_BUILD_NUMBER):$(TARGET_BUILD_VARIANT)/$(BUILD_VERSION_TAGS)
 endif
 ifneq ($(words $(BUILD_FINGERPRINT)),1)
   $(error BUILD_FINGERPRINT cannot contain spaces: "$(BUILD_FINGERPRINT)")
@@ -197,6 +197,14 @@ define get-default-product-locale
 $(strip $(subst _,-, $(firstword $(1))))
 endef
 
+define get-asus-build-sku
+$(subst _Tinkerboard,,$(1))
+endef
+
+define get-default-product-locale-region
+$(word 2, $(subst -, , $(call get-default-product-locale, $(1))))
+endef
+
 BUILDINFO_SH := build/tools/buildinfo.sh
 
 # TARGET_BUILD_FLAVOR and ro.build.flavor are used only by the test harness to distinguish builds.
@@ -224,9 +232,12 @@ endif
 	$(hide) TARGET_BUILD_TYPE="$(TARGET_BUILD_VARIANT)" \
 			TARGET_BUILD_FLAVOR="$(TARGET_BUILD_FLAVOR)" \
 			TARGET_DEVICE="$(TARGET_DEVICE)" \
+			ASUS_TARGET_DEVICE="$(ASUS_TARGET_DEVICE)" \
 			PRODUCT_NAME="$(TARGET_PRODUCT)" \
+			ASUS_BUILD_SKU="$(call get-asus-build-sku,$(TARGET_PRODUCT))" \
 			PRODUCT_BRAND="$(PRODUCT_BRAND)" \
 			PRODUCT_DEFAULT_LOCALE="$(call get-default-product-locale,$(PRODUCT_LOCALES))" \
+			PRODUCT_DEFAULT_LOCALE_REGION="$(call get-default-product-locale-region,$(PRODUCT_LOCALES))" \
 			PRODUCT_DEFAULT_WIFI_CHANNELS="$(PRODUCT_DEFAULT_WIFI_CHANNELS)" \
 			PRODUCT_MODEL="$(PRODUCT_MODEL)" \
 			PRODUCT_MANUFACTURER="$(PRODUCT_MANUFACTURER)" \
