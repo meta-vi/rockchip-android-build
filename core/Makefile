@@ -198,7 +198,7 @@ $(strip $(subst _,-, $(firstword $(1))))
 endef
 
 define get-asus-build-sku
-$(subst _Tinkerboard,,$(1))
+$(subst _Tinker_Board,,$(1))
 endef
 
 define get-default-product-locale-region
