@@ -304,6 +304,10 @@ define get-default-product-locale
 $(strip $(subst _,-, $(firstword $(1))))
 endef
 
+define get-default-product-locale-region
+$(word 2, $(subst -, , $(call get-default-product-locale, $(1))))
+endef
+
 BUILDINFO_SH := build/make/tools/buildinfo.sh
 VENDOR_BUILDINFO_SH := build/make/tools/vendor_buildinfo.sh
 
@@ -340,6 +344,7 @@ endif
 			PRODUCT_NAME="$(TARGET_PRODUCT)" \
 			PRODUCT_BRAND="$(PRODUCT_BRAND)" \
 			PRODUCT_DEFAULT_LOCALE="$(call get-default-product-locale,$(PRODUCT_LOCALES))" \
+			PRODUCT_DEFAULT_LOCALE_REGION="$(call get-default-product-locale-region,$(PRODUCT_LOCALES))" \
 			PRODUCT_DEFAULT_WIFI_CHANNELS="$(PRODUCT_DEFAULT_WIFI_CHANNELS)" \
 			PRODUCT_MODEL="$(PRODUCT_MODEL)" \
 			PRODUCT_MANUFACTURER="$(PRODUCT_MANUFACTURER)" \
