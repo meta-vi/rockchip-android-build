@@ -401,7 +401,11 @@ ifeq ($(TARGET_BUILD_VARIANT),user)
   endif
 else
   # Non-user builds should show detailed build information
-  BUILD_DISPLAY_ID := $(build_desc)
+  ifeq (true,$(DISPLAY_BUILD_NUMBER))
+    BUILD_DISPLAY_ID := $(TARGET_PRODUCT)-$(TARGET_BUILD_VARIANT) $(BUILD_NUMBER_FROM_FILE) $(BUILD_VERSION_TAGS)
+  else
+    BUILD_DISPLAY_ID := $(build_desc)
+  endif
 endif
 
 # Accepts a whitespace separated list of product locales such as
