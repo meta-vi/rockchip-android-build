@@ -212,6 +212,9 @@ FINAL_VENDOR_DEFAULT_PROPERTIES += \
 endif
 FINAL_VENDOR_DEFAULT_PROPERTIES := $(call uniq-pairs-by-first-component, \
     $(FINAL_VENDOR_DEFAULT_PROPERTIES),=)
+define get-default-product-locale-region
+$(word 2, $(subst -, , $(call get-default-product-locale, $(1))))
+endef
 
 # -----------------------------------------------------------------
 # prop.default
@@ -452,8 +455,11 @@ endif
 	$(hide) TARGET_BUILD_TYPE="$(TARGET_BUILD_VARIANT)" \
 	        TARGET_BUILD_FLAVOR="$(TARGET_BUILD_FLAVOR)" \
 	        TARGET_DEVICE="$(TARGET_DEVICE)" \
+	        PRODUCT_NAME="$(TARGET_PRODUCT)" \
 	        PRODUCT_DEFAULT_LOCALE="$(call get-default-product-locale,$(PRODUCT_LOCALES))" \
+	        PRODUCT_DEFAULT_LOCALE_REGION="$(call get-default-product-locale-region,$(PRODUCT_LOCALES))" \
 	        PRODUCT_DEFAULT_WIFI_CHANNELS="$(PRODUCT_DEFAULT_WIFI_CHANNELS)" \
+	        PRODUCT_MODEL="$(PRODUCT_MODEL)" \
 	        PRIVATE_BUILD_DESC="$(PRIVATE_BUILD_DESC)" \
 	        BUILD_ID="$(BUILD_ID)" \
 	        BUILD_DISPLAY_ID="$(BUILD_DISPLAY_ID)" \
