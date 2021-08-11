@@ -2941,7 +2941,7 @@ DIFF_PROGRAM_BY_EXT = {
     ".zip": ["imgdiff", "-z"],
     ".jar": ["imgdiff", "-z"],
     ".apk": ["imgdiff", "-z"],
-    ".img": "imgdiff",
+    ".img": "bsdiff",
 }
 
 
