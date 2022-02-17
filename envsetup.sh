@@ -339,6 +339,9 @@ function setpaths()
     unset TARGET_BOARD_PLATFORM_EBOOK
     export TARGET_BOARD_PLATFORM_EBOOK=$(get_build_var BUILD_WITH_RK_EBOOK)
 
+    unset PRODUCT_KERNEL_VERSION
+    export PRODUCT_KERNEL_VERSION=$(get_build_var PRODUCT_KERNEL_VERSION)
+
     # needed for building linux on MacOS
     # TODO: fix the path
     #export HOST_EXTRACFLAGS="-I "$T/system/kernel_headers/host_include
