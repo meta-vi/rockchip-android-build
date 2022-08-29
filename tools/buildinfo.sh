@@ -9,6 +9,7 @@ if [ "$BOARD_USE_VBMETA_DIGTEST_IN_FINGERPRINT" = "true" ] ; then
 else
   echo "ro.build.id=$BUILD_ID"
 fi
+echo "ro.build.csc.version=$ASUS_CSC_BUILD_NUMBER"
 echo "ro.build.display.id=$BUILD_DISPLAY_ID"
 echo "ro.build.version.incremental=$BUILD_NUMBER"
 echo "ro.build.version.sdk=$PLATFORM_SDK_VERSION"
@@ -31,6 +32,10 @@ echo "ro.build.flavor=$TARGET_BUILD_FLAVOR"
 if [ -n "$BOARD_BUILD_SYSTEM_ROOT_IMAGE" ] ; then
   echo "ro.build.system_root_image=$BOARD_BUILD_SYSTEM_ROOT_IMAGE"
 fi
+
+echo "ro.product.device=$TARGET_DEVICE"
+echo "ro.product.carrier=$PRODUCT_DEFAULT_LOCALE_REGION-$PRODUCT_MODEL-$PRODUCT_NAME"
+echo "ro.build.fota.version=$PRODUCT_NAME-$BUILD_NUMBER"
 
 # These values are deprecated, use "ro.product.cpu.abilist"
 # instead (see below).
